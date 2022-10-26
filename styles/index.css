@@ -1,0 +1,12 @@
+@import url("/styles/_normalize.css");
+
+body {
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 1160px;
+}
