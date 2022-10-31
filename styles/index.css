@@ -14,6 +14,7 @@ body {
   max-width: 1160px;
 }
 
+/* Overlay */
 .overlay {
   display: none;
 
@@ -27,6 +28,10 @@ body {
   width: 100%;
 
   background-color: rgba(0, 0, 0, 0.3);
+}
+
+.overlay__visible {
+  display: block;
 }
 
 /* Buttons */
@@ -64,6 +69,47 @@ body {
 
 .button_blue:active {
   background-color: #005bfe;
+}
+
+.button_transparent {
+  color: #005bfe;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.button_transparent:hover {
+  background-color: rgba(0, 91, 254, 0.1);
+}
+
+.button_transparent:active {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.square-button {
+  height: 38px;
+  width: 38px;
+
+  padding: 0;
+
+  background-color: rgba(255, 255, 255, 0);
+
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+}
+
+.square-button_edit {
+  background: url("../images/edit-grey.svg") no-repeat center;
+}
+
+.square-button_edit:hover {
+  background: url("../images/edit-white.svg") no-repeat center, #005bfe;
+}
+
+.square-button_delete {
+  background: url("../images/delete-grey.svg") no-repeat center;
+}
+
+.square-button_delete:hover {
+  background: url("../images/delete-white.svg") no-repeat center, #ea3d2f;
 }
 
 /* Navbar */
@@ -156,49 +202,11 @@ body {
 }
 
 .item__button {
-  height: 38px;
-  width: 38px;
-
   margin-right: 8px;
-  padding: 0;
-
-  background-color: rgba(255, 255, 255, 0);
-
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 6px;
 }
 
 .item__button:last-child {
   margin-right: 0;
-}
-
-.item__button_edit {
-  background: url("../images/edit-grey.svg") no-repeat center;
-}
-
-.item__button_edit:hover {
-  background: url("../images/edit-white.svg") no-repeat center, #005bfe;
-}
-
-.item__button_delete {
-  background: url("../images/delete-grey.svg") no-repeat center;
-}
-
-.item__button_delete:hover {
-  background: url("../images/delete-white.svg") no-repeat center, #ea3d2f;
-}
-
-/* Open-Close */
-.overlay__visible {
-  display: block;
-}
-
-.form__contact {
-  display: none;
-}
-
-.form__contact_visible {
-  display: block;
 }
 
 /* Form */
@@ -238,31 +246,44 @@ body {
 .form__body {
   padding: 24px;
 
-  /* height: 100%; */
-
   flex: 1 0;
 
   display: flex;
   flex-direction: column;
 }
 
+.form__item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+
+  width: 100%;
+}
+
 .form__input {
   box-sizing: border-box;
 
   background-color: rgba(0, 0, 0, 0.05);
-  color: rgba(0, 0, 0, 0.5);
+  color: rgba(0, 0, 0, 1);
 
-  width: 100%;
+  flex-grow: 1;
+  max-width: 100%;
 
   border-radius: 6px;
   border: none;
 
   margin-bottom: 16px;
   padding: 11px;
+
+  font-size: 14px;
 }
 
-.form__submit {
+.form__buttons {
   align-self: flex-end;
 
   margin-top: auto;
+}
+
+.form_hidden {
+  display: none;
 }

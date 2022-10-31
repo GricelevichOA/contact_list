@@ -1,18 +1,42 @@
 const overlay = document.querySelector(".overlay");
 
-const formCloseBtn = document.querySelector(".form__close");
-const formOpenBtn = document.querySelector("#add_contact");
-const formContact = document.querySelector(".form__contact");
+// contact form variables
+const openContactFormBtn = document.querySelector("#contact-form-open");
+const closeContactFormBtn = document.querySelector("#contact-form-close");
+const formContact = document.querySelector(".contact-form");
 
-const openForm = () => {
+// groups form variables
+const openGroupsFormBtn = document.querySelector("#groups-form-open");
+const closeGroupsFormBtn = document.querySelector("#groups-form-close");
+const formGroups = document.querySelector(".groups-form");
+
+// contact form functions
+const openContactForm = () => {
   overlay.classList.add("overlay__visible");
-  formContact.classList.add("form__contact_visible");
+  formContact.classList.remove("form_hidden");
 };
 
-const closeForm = () => {
-  formContact.classList.remove("form__contact_visible");
+const closeContactForm = () => {
+  formContact.classList.add("form_hidden");
   overlay.classList.remove("overlay__visible");
 };
 
-formOpenBtn.addEventListener("click", openForm);
-formCloseBtn.addEventListener("click", closeForm);
+// groups form functions
+const openGroupsForm = () => {
+  overlay.classList.add("overlay__visible");
+  formGroups.classList.remove("form_hidden");
+};
+
+const closeGroupsForm = () => {
+  formGroups.classList.add("form_hidden");
+  overlay.classList.remove("overlay__visible");
+};
+
+// event listeners
+// contact form
+openContactFormBtn.addEventListener("click", openContactForm);
+closeContactFormBtn.addEventListener("click", closeContactForm);
+
+// groups form
+openGroupsFormBtn.addEventListener("click", openGroupsForm);
+closeGroupsFormBtn.addEventListener("click", closeGroupsForm);
