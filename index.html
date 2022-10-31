@@ -15,9 +15,10 @@
       <div class="navbar__content">
         <div class="navbar__logo">Книга контактов</div>
         <div class="navbar__buttons">
-          <button class="navbar__button button button_add-contact">Добавить
+          <button id="add_contact"
+            class="navbar__button button button_red">Добавить
             контакт +</button>
-          <button class="navbar__button button button_groups ">Группы</button>
+          <button class="navbar__button button button_blue ">Группы</button>
         </div>
       </div>
     </div>
@@ -45,6 +46,31 @@
       <div class="group__title group__title_closed">Коллеги</div>
     </div>
   </main>
+
+  <div class="overlay">
+    <div class="form__contact form">
+      <div class="form__header">
+        <div class="form__title">Добавление контакта</div>
+        <button class="form__close"></button>
+      </div>
+      <form class="form__body">
+        <input class="form__input" type="text" name="" id=""
+          placeholder="Введите ФИО">
+        <input class="form__input" type="tel" name="" id=""
+          placeholder="Введите номер">
+        <select class="form__input" name="" id="">
+          <option disabled selected hidden>Выберите группу</option>
+          <option value="Коллеги">Коллеги</option>
+          <option value="Друзья">Друзья</option>
+        </select>
+
+        <button class="form__submit button button_blue"
+          type="submit">Сохранить</button>
+      </form>
+    </div>
+
+
+  </div>
 
   <script src="index.js"></script>
 </body>

@@ -14,6 +14,21 @@ body {
   max-width: 1160px;
 }
 
+.overlay {
+  display: none;
+
+  position: fixed;
+
+  top: 0;
+  left: 0;
+  z-index: 2;
+
+  height: 100%;
+  width: 100%;
+
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
 /* Buttons */
 .button {
   padding: 10px 14px;
@@ -25,29 +40,29 @@ body {
   font-weight: 700;
 }
 
-.button_add-contact {
+.button_red {
   color: #fff;
   background-color: #f81155;
 }
 
-.button_add-contact:hover {
+.button_red:hover {
   background-color: #d1003e;
 }
 
-.button_add-contact:active {
+.button_red:active {
   background-color: #f81155;
 }
 
-.button_groups {
+.button_blue {
   color: #fff;
   background-color: #005bfe;
 }
 
-.button_groups:hover {
+.button_blue:hover {
   background-color: #0047c6;
 }
 
-.button_groups:active {
+.button_blue:active {
   background-color: #005bfe;
 }
 
@@ -171,4 +186,83 @@ body {
 
 .item__button_delete:hover {
   background: url("../images/delete-white.svg") no-repeat center, #ea3d2f;
+}
+
+/* Open-Close */
+.overlay__visible {
+  display: block;
+}
+
+.form__contact {
+  display: none;
+}
+
+.form__contact_visible {
+  display: block;
+}
+
+/* Form */
+.form {
+  display: flex;
+  flex-direction: column;
+
+  background-color: #fff;
+
+  z-index: 3;
+
+  width: 312px;
+  height: 100%;
+}
+
+.form__header {
+  padding: 24px;
+
+  display: flex;
+  justify-content: space-between;
+
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.form__close {
+  height: 24px;
+  width: 24px;
+  background: url("../images/cross.svg") no-repeat center, rgba(0, 0, 0, 0);
+  border: none;
+  border-radius: 6px;
+}
+
+.form__close:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.form__body {
+  padding: 24px;
+
+  /* height: 100%; */
+
+  flex: 1 0;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.form__input {
+  box-sizing: border-box;
+
+  background-color: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.5);
+
+  width: 100%;
+
+  border-radius: 6px;
+  border: none;
+
+  margin-bottom: 16px;
+  padding: 11px;
+}
+
+.form__submit {
+  align-self: flex-end;
+
+  margin-top: auto;
 }
