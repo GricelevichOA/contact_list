@@ -179,6 +179,10 @@ body {
   display: none;
 }
 
+.group__items:empty {
+  padding-bottom: 0;
+}
+
 .group__items_active {
   display: block;
 }
