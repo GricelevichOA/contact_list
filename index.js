@@ -1,5 +1,5 @@
 // data
-const groups = ["Друзья", "Коллеги", "Соседи"];
+const groups = ["Друзья", "Коллеги", "Соседи", "Враги"];
 // const groups = [];
 
 let contacts = [
@@ -148,6 +148,16 @@ const renderContacts = () => {
   }
 };
 
+const setGroupInput = (groups) => {
+  groups.forEach((group) => {
+    const option = document.createElement("option");
+    option.value = group;
+    option.innerText = group;
+
+    contactGroupInput.append(option);
+  });
+};
+
 // event listeners
 // contact form
 openContactFormBtn.addEventListener("click", openContactForm);
@@ -160,6 +170,7 @@ closeGroupsFormBtn.addEventListener("click", closeGroupsForm);
 // group variables
 
 renderContacts();
+setGroupInput(groups);
 
 mainContainer.addEventListener("click", (e) => {
   if (e.target.classList.contains("group__title")) {
