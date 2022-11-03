@@ -2,7 +2,7 @@
 const groups = ["Друзья", "Коллеги", "Соседи"];
 // const groups = [];
 
-const contacts = [
+let contacts = [
   {
     id: 1,
     name: "Иванов Иван Иванович",
@@ -38,7 +38,7 @@ const formContactElem = document.querySelector(".contact-form");
 const addContactForm = document.querySelector("#add-contact-form");
 
 const contactNameInput = document.querySelector("#form-contact-name");
-const contactNumberInput = document.querySelector("#form-contact-number");
+const contactPhoneInput = document.querySelector("#form-contact-number");
 const contactGroupInput = document.querySelector("#form-contact-group");
 
 // groups form variables
@@ -49,47 +49,51 @@ const formGroups = document.querySelector(".groups-form");
 // functions
 // contact form functions
 const openContactForm = () => {
-  overlay.classList.add("overlay__visible");
+  overlay.classList.remove("overlay_hidden");
+
   formContactElem.classList.remove("form_hidden");
 };
 
 const closeContactForm = () => {
   formContactElem.classList.add("form_hidden");
-  overlay.classList.remove("overlay__visible");
+  overlay.classList.add("overlay_hidden");
 };
 
 const saveContact = () => {
   const newContact = {
     id: Date.now(),
     name: contactNameInput.value,
-    number: contactNumberInput.value,
+    phone: contactPhoneInput.value,
     group: contactGroupInput.value,
   };
 
   contacts.push(newContact);
 
   contactNameInput.value = "";
-  contactNumberInput.value = "";
+  contactPhoneInput.value = "";
   contactGroupInput.selectedIndex = 0;
 
   renderContacts();
 };
 
+const deleteContact = (contactId) => {
+  const contactToDelete = contacts.find((contact) => contact.id === contactId);
+
+  const newContacts = contacts.filter((contact) => contact.id !== contactId);
+
+  contacts = [...newContacts];
+  renderContacts();
+};
+
 // groups form functions
 const openGroupsForm = () => {
-  overlay.classList.add("overlay__visible");
+  overlay.classList.remove("overlay_hidden");
   formGroups.classList.remove("form_hidden");
 };
 
 const closeGroupsForm = () => {
   formGroups.classList.add("form_hidden");
-  overlay.classList.remove("overlay__visible");
-};
-
-// main page groups functions
-const toggleGroup = (i) => {
-  groupItemsElems[i].classList.toggle("group__items_active");
-  groupTitleElems[i].classList.toggle("group__title_active");
+  overlay.classList.add("overlay_hidden");
 };
 
 // render contacts
@@ -124,9 +128,10 @@ const renderContacts = () => {
       groupContacts.forEach((gc) => {
         const groupItemElem = document.createElement("div");
         groupItemElem.classList.add("group__item", "item");
+        groupItemElem.setAttribute("data-contact-id", gc.id);
         groupItemElem.innerHTML = `
           <div class="item__name">${gc.name}</div>
-          <div class="item__number">${gc.phone}</div>
+          <div class="item__phone">${gc.phone}</div>
           <button
             class="item__button square-button square-button_edit"></button>
           <button
@@ -155,13 +160,20 @@ closeGroupsFormBtn.addEventListener("click", closeGroupsForm);
 // group variables
 
 renderContacts();
-const groupTitleElems = document.querySelectorAll(".group__title");
-const groupItemsElems = document.querySelectorAll(".group__items");
 
 mainContainer.addEventListener("click", (e) => {
   if (e.target.classList.contains("group__title")) {
     e.target.classList.toggle("group__title_active");
     e.target.nextSibling.classList.toggle("group__items_active");
+  }
+});
+
+// delete contact
+mainContainer.addEventListener("click", (e) => {
+  if (e.target.classList.contains("square-button_delete")) {
+    if (confirm("Вы действительно хотите удалить контакт?")) {
+      deleteContact(+e.target.parentElement.getAttribute("data-contact-id"));
+    }
   }
 });
 

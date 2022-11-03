@@ -16,7 +16,7 @@ body {
 
 /* Overlay */
 .overlay {
-  display: none;
+  display: block;
 
   position: fixed;
 
@@ -30,8 +30,8 @@ body {
   background-color: rgba(0, 0, 0, 0.3);
 }
 
-.overlay__visible {
-  display: block;
+.overlay_hidden {
+  display: none;
 }
 
 /* Buttons */
@@ -209,7 +209,7 @@ body {
   font-weight: 400;
 }
 
-.item__number {
+.item__phone {
   margin-right: 24px;
 
   font-weight: 400;
