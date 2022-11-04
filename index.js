@@ -34,8 +34,7 @@ const mainContainer = document.querySelector("#main-container");
 // contact form variables
 const openContactFormBtn = document.querySelector("#contact-form-open");
 const closeContactFormBtn = document.querySelector("#contact-form-close");
-const formContactElem = document.querySelector(".contact-form");
-const addContactForm = document.querySelector("#add-contact-form");
+const contactForm = document.querySelector("#contact-form");
 
 const contactNameInput = document.querySelector("#form-contact-name");
 const contactPhoneInput = document.querySelector("#form-contact-number");
@@ -44,18 +43,16 @@ const contactGroupInput = document.querySelector("#form-contact-group");
 // groups form variables
 const openGroupsFormBtn = document.querySelector("#groups-form-open");
 const closeGroupsFormBtn = document.querySelector("#groups-form-close");
-const formGroups = document.querySelector(".groups-form");
+const groupsForm = document.querySelector(".groups-form");
 
 // functions
-// contact form functions
-const openContactForm = () => {
+const openForm = (formElem) => {
   overlay.classList.remove("overlay_hidden");
-
-  formContactElem.classList.remove("form_hidden");
+  formElem.classList.remove("form_hidden");
 };
 
-const closeContactForm = () => {
-  formContactElem.classList.add("form_hidden");
+const closeForm = (formElem) => {
+  formElem.classList.add("form_hidden");
   overlay.classList.add("overlay_hidden");
 };
 
@@ -76,27 +73,36 @@ const saveContact = () => {
   renderContacts();
 };
 
-const deleteContact = (contactId) => {
-  const contactToDelete = contacts.find((contact) => contact.id === contactId);
+const editContact = (contactId) => {
+  const cont = contacts.find((c) => c.id === contactId);
+  console.log("Contact to edit: ");
+  console.log(cont);
+};
 
+const deleteContact = (contactId) => {
   const newContacts = contacts.filter((contact) => contact.id !== contactId);
 
   contacts = [...newContacts];
   renderContacts();
 };
 
-// groups form functions
-const openGroupsForm = () => {
-  overlay.classList.remove("overlay_hidden");
-  formGroups.classList.remove("form_hidden");
-};
-
-const closeGroupsForm = () => {
-  formGroups.classList.add("form_hidden");
-  overlay.classList.add("overlay_hidden");
-};
-
 // render contacts
+const createContactElement = (contactData) => {
+  const groupItemElem = document.createElement("div");
+  groupItemElem.classList.add("group__item", "item");
+  groupItemElem.setAttribute("data-contact-id", contactData.id);
+  groupItemElem.innerHTML = `
+    <div class="item__name">${contactData.name}</div>
+    <div class="item__phone">${contactData.phone}</div>
+    <button
+      class="item__button square-button square-button_edit"></button>
+    <button
+      class="item__button square-button square-button_delete"></button>
+  `;
+
+  return groupItemElem;
+};
+
 const renderContacts = () => {
   mainContainer.innerHTML = "";
 
@@ -114,10 +120,10 @@ const renderContacts = () => {
       const groupElemTitle = document.createElement("div");
       const groupElemContent = document.createElement("div");
 
-      groupElemTitle.classList.add("group__title");
+      groupElemTitle.classList.add("group__title", "group__title_active");
       groupElemTitle.innerText = group;
 
-      groupElemContent.classList.add("group__items");
+      groupElemContent.classList.add("group__items", "group__items_active");
 
       groupElem.append(groupElemTitle);
       groupElem.append(groupElemContent);
@@ -126,19 +132,7 @@ const renderContacts = () => {
       mainContainer.append(groupElem);
 
       groupContacts.forEach((gc) => {
-        const groupItemElem = document.createElement("div");
-        groupItemElem.classList.add("group__item", "item");
-        groupItemElem.setAttribute("data-contact-id", gc.id);
-        groupItemElem.innerHTML = `
-          <div class="item__name">${gc.name}</div>
-          <div class="item__phone">${gc.phone}</div>
-          <button
-            class="item__button square-button square-button_edit"></button>
-          <button
-            class="item__button square-button square-button_delete"></button>
-        `;
-
-        groupElemContent.append(groupItemElem);
+        groupElemContent.append(createContactElement(gc));
       });
     });
   } else {
@@ -149,6 +143,10 @@ const renderContacts = () => {
 };
 
 const setGroupInput = (groups) => {
+  contactGroupInput.innerHTML = `
+    <option value="" disabled selected hidden>Выберите группу</option>
+  `;
+
   groups.forEach((group) => {
     const option = document.createElement("option");
     option.value = group;
@@ -160,12 +158,12 @@ const setGroupInput = (groups) => {
 
 // event listeners
 // contact form
-openContactFormBtn.addEventListener("click", openContactForm);
-closeContactFormBtn.addEventListener("click", closeContactForm);
+openContactFormBtn.addEventListener("click", () => openForm(contactForm));
+closeContactFormBtn.addEventListener("click", () => closeForm(contactForm));
 
 // groups form
-openGroupsFormBtn.addEventListener("click", openGroupsForm);
-closeGroupsFormBtn.addEventListener("click", closeGroupsForm);
+openGroupsFormBtn.addEventListener("click", () => openForm(groupsForm));
+closeGroupsFormBtn.addEventListener("click", () => closeForm(groupsForm));
 
 // group variables
 
@@ -179,6 +177,13 @@ mainContainer.addEventListener("click", (e) => {
   }
 });
 
+// edit contact
+mainContainer.addEventListener("click", (e) => {
+  if (e.target.classList.contains("square-button_edit")) {
+    editContact(+e.target.parentElement.getAttribute("data-contact-id"));
+  }
+});
+
 // delete contact
 mainContainer.addEventListener("click", (e) => {
   if (e.target.classList.contains("square-button_delete")) {
@@ -189,7 +194,7 @@ mainContainer.addEventListener("click", (e) => {
 });
 
 // add contact form
-addContactForm.addEventListener("submit", (e) => {
+contactForm.addEventListener("submit", (e) => {
   e.preventDefault();
   saveContact();
   closeContactForm();

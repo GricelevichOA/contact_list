@@ -54,25 +54,26 @@
 
   <div class="overlay overlay_hidden">
 
-    <div class="contact-form form form_hidden">
+    <form id="contact-form" class="contact-form form form_hidden">
       <div class="form__header">
         <div class="form__title">Добавление контакта</div>
-        <button id="contact-form-close" class="form__close"></button>
+        <button id="contact-form-close" type="button"
+          class="form__close"></button>
       </div>
-      <form id="add-contact-form" class="form__body">
+      <div class="form__body">
         <div class="form__item">
-          <input id="form-contact-name" class="form__input" type="text" name=""
-            id="" placeholder="Введите ФИО" required>
+          <input id="form-contact-name" class="form__input" type="text"
+            name="contact_name" id="" placeholder="Введите ФИО" required>
         </div>
 
         <div class="form__item">
-          <input id="form-contact-number" class="form__input" type="tel" name=""
-            id="" placeholder="Введите номер" required>
+          <input id="form-contact-number" class="form__input" type="tel"
+            name="contact_phone" id="" placeholder="Введите номер" required>
         </div>
 
         <div class="form__item">
-          <select id="form-contact-group" class="form__input" name="" id=""
-            required>
+          <select id="form-contact-group" class="form__input"
+            name="contact_group" id="" required>
             <option value="" disabled selected hidden>Выберите группу</option>
           </select>
         </div>
@@ -82,16 +83,17 @@
             type="submit">Сохранить</button>
         </div>
 
-      </form>
-    </div>
+      </div>
+    </form>
 
 
-    <div class="groups-form form form_hidden">
+    <form id="groups-form" class="groups-form form form_hidden">
       <div class="form__header">
         <div class="form__title">Группы контактов</div>
-        <button id="groups-form-close" class="form__close"></button>
+        <button id="groups-form-close" type="button"
+          class="form__close"></button>
       </div>
-      <form class="form__body">
+      <div class="form__body">
 
         <div class="form__item">
           <input class="form__input" type="text" value="Друзья"
@@ -103,26 +105,28 @@
         <div class="form__item">
           <input class="form__input" type="text" value="Коллеги"
             placeholder="Введите название">
-          <button class="form__button square-button square-button_delete">
+          <button type="button"
+            class="form__button square-button square-button_delete">
           </button>
         </div>
 
         <div class="form__item">
           <input class="form__input" type="text" placeholder="Введите название">
-          <button class="form__button square-button square-button_delete">
+          <button type="button"
+            class="form__button square-button square-button_delete">
           </button>
         </div>
 
 
         <div class="form__buttons">
-          <button
+          <button type="button"
             class="form__submit button button_transparent">Добавить</button>
           <button class="form__submit button button_blue"
             type="submit">Сохранить</button>
         </div>
 
-      </form>
-    </div>
+      </div>
+    </form>
 
   </div>
 
