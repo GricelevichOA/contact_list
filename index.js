@@ -39,11 +39,12 @@ const contactForm = document.querySelector("#contact-form");
 const contactNameInput = document.querySelector("#form-contact-name");
 const contactPhoneInput = document.querySelector("#form-contact-number");
 const contactGroupInput = document.querySelector("#form-contact-group");
+const contactIdInput = document.querySelector("#form-contact-id");
 
 // groups form variables
 const openGroupsFormBtn = document.querySelector("#groups-form-open");
 const closeGroupsFormBtn = document.querySelector("#groups-form-close");
-const groupsForm = document.querySelector(".groups-form");
+const groupsForm = document.querySelector("#groups-form");
 
 // functions
 const openForm = (formElem) => {
@@ -56,34 +57,54 @@ const closeForm = (formElem) => {
   overlay.classList.add("overlay_hidden");
 };
 
-const saveContact = () => {
+const clearContactForm = () => {
+  contactNameInput.value = "";
+  contactPhoneInput.value = "";
+  contactIdInput.value = "";
+  contactGroupInput.selectedIndex = 0;
+};
+
+const saveContact = (contact) => {
   const newContact = {
-    id: Date.now(),
+    id: +contactIdInput.value,
     name: contactNameInput.value,
     phone: contactPhoneInput.value,
     group: contactGroupInput.value,
   };
 
-  contacts.push(newContact);
+  if (!newContact.id) {
+    newContact.id = Date.now();
+    contacts.push(newContact);
+  } else {
+    const contactIndex = contacts.findIndex((c) => c.id === newContact.id);
+    if (contactIndex !== -1) {
+      contacts[contactIndex].name = newContact.name;
+      contacts[contactIndex].phone = newContact.phone;
+      contacts[contactIndex].group = newContact.group;
+    }
+  }
 
-  contactNameInput.value = "";
-  contactPhoneInput.value = "";
-  contactGroupInput.selectedIndex = 0;
+  clearContactForm();
 
-  renderContacts();
+  renderContacts(groups, contacts);
 };
 
-const editContact = (contactId) => {
-  const cont = contacts.find((c) => c.id === contactId);
-  console.log("Contact to edit: ");
-  console.log(cont);
+const editContactHandler = (contactId) => {
+  const contactToEdit = contacts.find((c) => c.id === contactId);
+
+  openForm(contactForm);
+
+  contactNameInput.value = contactToEdit.name;
+  contactPhoneInput.value = contactToEdit.phone;
+  contactIdInput.value = contactToEdit.id;
+  contactGroupInput.value = contactToEdit.group;
 };
 
 const deleteContact = (contactId) => {
   const newContacts = contacts.filter((contact) => contact.id !== contactId);
 
   contacts = [...newContacts];
-  renderContacts();
+  renderContacts(groups, contacts);
 };
 
 // render contacts
@@ -103,12 +124,29 @@ const createContactElement = (contactData) => {
   return groupItemElem;
 };
 
-const renderContacts = () => {
+const createGroupElement = (group) => {
+  const groupElem = document.createElement("div");
+  const groupElemTitle = document.createElement("div");
+  const groupElemContent = document.createElement("div");
+
+  groupElem.classList.add("group");
+
+  groupElemTitle.classList.add("group__title", "group__title_active");
+  groupElemTitle.innerText = group;
+  groupElem.append(groupElemTitle);
+
+  groupElemContent.classList.add("group__items", "group__items_active");
+  groupElem.append(groupElemContent);
+
+  return groupElem;
+};
+
+const renderContacts = (groupsArray, contactsArray) => {
   mainContainer.innerHTML = "";
 
-  if (groups.length > 0) {
-    groups.forEach((group) => {
-      const groupContacts = contacts.filter(
+  if (contactsArray.length > 0) {
+    groupsArray.forEach((group) => {
+      const groupContacts = contactsArray.filter(
         (contact) => contact.group === group
       );
 
@@ -116,27 +154,18 @@ const renderContacts = () => {
         return;
       }
 
-      const groupElem = document.createElement("div");
-      const groupElemTitle = document.createElement("div");
-      const groupElemContent = document.createElement("div");
-
-      groupElemTitle.classList.add("group__title", "group__title_active");
-      groupElemTitle.innerText = group;
-
-      groupElemContent.classList.add("group__items", "group__items_active");
-
-      groupElem.append(groupElemTitle);
-      groupElem.append(groupElemContent);
-
-      groupElem.classList.add("group");
-      mainContainer.append(groupElem);
+      const groupElem = createGroupElement(group);
+      const groupElemContent = groupElem.querySelector(".group__items");
 
       groupContacts.forEach((gc) => {
         groupElemContent.append(createContactElement(gc));
       });
+
+      mainContainer.append(groupElem);
     });
   } else {
     const placeholder = document.createElement("div");
+    placeholder.classList.add("placeholder");
     placeholder.innerText = "Список контактов пуст";
     mainContainer.append(placeholder);
   }
@@ -159,15 +188,16 @@ const setGroupInput = (groups) => {
 // event listeners
 // contact form
 openContactFormBtn.addEventListener("click", () => openForm(contactForm));
-closeContactFormBtn.addEventListener("click", () => closeForm(contactForm));
+closeContactFormBtn.addEventListener("click", () => {
+  clearContactForm();
+  closeForm(contactForm);
+});
 
 // groups form
 openGroupsFormBtn.addEventListener("click", () => openForm(groupsForm));
 closeGroupsFormBtn.addEventListener("click", () => closeForm(groupsForm));
 
-// group variables
-
-renderContacts();
+renderContacts(groups, contacts);
 setGroupInput(groups);
 
 mainContainer.addEventListener("click", (e) => {
@@ -180,7 +210,7 @@ mainContainer.addEventListener("click", (e) => {
 // edit contact
 mainContainer.addEventListener("click", (e) => {
   if (e.target.classList.contains("square-button_edit")) {
-    editContact(+e.target.parentElement.getAttribute("data-contact-id"));
+    editContactHandler(+e.target.parentElement.getAttribute("data-contact-id"));
   }
 });
 
@@ -197,5 +227,5 @@ mainContainer.addEventListener("click", (e) => {
 contactForm.addEventListener("submit", (e) => {
   e.preventDefault();
   saveContact();
-  closeContactForm();
+  closeForm(contactForm);
 });

@@ -54,7 +54,7 @@
 
   <div class="overlay overlay_hidden">
 
-    <form id="contact-form" class="contact-form form form_hidden">
+    <form id="contact-form" class="form form_hidden">
       <div class="form__header">
         <div class="form__title">Добавление контакта</div>
         <button id="contact-form-close" type="button"
@@ -63,19 +63,25 @@
       <div class="form__body">
         <div class="form__item">
           <input id="form-contact-name" class="form__input" type="text"
-            name="contact_name" id="" placeholder="Введите ФИО" required>
+            name="contact_name" placeholder="Введите ФИО" required>
         </div>
 
         <div class="form__item">
           <input id="form-contact-number" class="form__input" type="tel"
-            name="contact_phone" id="" placeholder="Введите номер" required>
+            name="contact_phone" placeholder="Введите номер" required>
         </div>
+
 
         <div class="form__item">
           <select id="form-contact-group" class="form__input"
-            name="contact_group" id="" required>
+            name="contact_group" required>
             <option value="" disabled selected hidden>Выберите группу</option>
           </select>
+        </div>
+
+        <div class="form__item">
+          <input id="form-contact-id" class="form__input" type="hidden"
+            name="contact_phone" value="">
         </div>
 
         <div class="form__buttons">
@@ -83,11 +89,13 @@
             type="submit">Сохранить</button>
         </div>
 
+        <a href=""></a>
+
       </div>
     </form>
 
 
-    <form id="groups-form" class="groups-form form form_hidden">
+    <form id="groups-form" class="form form_hidden">
       <div class="form__header">
         <div class="form__title">Группы контактов</div>
         <button id="groups-form-close" type="button"
@@ -97,8 +105,8 @@
 
         <div class="form__item">
           <input class="form__input" type="text" value="Друзья"
-            placeholder="Введите название">
-          <button
+            placeholder="Введите название" disabled>
+          <button type="button"
             class="form__item-button square-button square-button_delete"></button>
         </div>
 
