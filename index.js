@@ -1,5 +1,5 @@
-// data
-const groups = ["Друзья", "Коллеги", "Соседи", "Враги"];
+// начальные данные
+let groups = ["Друзья", "Коллеги", "Соседи", "Враги"];
 // const groups = [];
 
 let contacts = [
@@ -36,6 +36,7 @@ const openContactFormBtn = document.querySelector("#contact-form-open");
 const closeContactFormBtn = document.querySelector("#contact-form-close");
 const contactForm = document.querySelector("#contact-form");
 
+// инпуты для формы контакта
 const contactNameInput = document.querySelector("#form-contact-name");
 const contactPhoneInput = document.querySelector("#form-contact-number");
 const contactGroupInput = document.querySelector("#form-contact-group");
@@ -45,6 +46,8 @@ const contactIdInput = document.querySelector("#form-contact-id");
 const openGroupsFormBtn = document.querySelector("#groups-form-open");
 const closeGroupsFormBtn = document.querySelector("#groups-form-close");
 const groupsForm = document.querySelector("#groups-form");
+
+const addGroupInputBtn = document.querySelector("#add-group-input");
 
 // functions
 const openForm = (formElem) => {
@@ -60,11 +63,12 @@ const closeForm = (formElem) => {
 const clearContactForm = () => {
   contactNameInput.value = "";
   contactPhoneInput.value = "";
-  contactIdInput.value = "";
   contactGroupInput.selectedIndex = 0;
+  contactIdInput.value = "";
 };
 
 const saveContact = (contact) => {
+  // создаётся новый объект контакт
   const newContact = {
     id: +contactIdInput.value,
     name: contactNameInput.value,
@@ -72,6 +76,8 @@ const saveContact = (contact) => {
     group: contactGroupInput.value,
   };
 
+  // если id пустой, то он генерируется и контакт добавляется в масив
+  // если нет - ищется контакт с таким id и изменяется
   if (!newContact.id) {
     newContact.id = Date.now();
     contacts.push(newContact);
@@ -86,11 +92,13 @@ const saveContact = (contact) => {
 
   clearContactForm();
 
+  // ререндер контактов
   renderContacts(groups, contacts);
 };
 
+// передаёт данные контакта в форму ждля редактирования
 const editContactHandler = (contactId) => {
-  const contactToEdit = contacts.find((c) => c.id === contactId);
+  const contactToEdit = contacts.find((c) => c.id === +contactId);
 
   openForm(contactForm);
 
@@ -101,27 +109,45 @@ const editContactHandler = (contactId) => {
 };
 
 const deleteContact = (contactId) => {
-  const newContacts = contacts.filter((contact) => contact.id !== contactId);
+  const newContacts = contacts.filter((contact) => contact.id !== +contactId);
 
   contacts = [...newContacts];
   renderContacts(groups, contacts);
 };
 
-// render contacts
 const createContactElement = (contactData) => {
-  const groupItemElem = document.createElement("div");
-  groupItemElem.classList.add("group__item", "item");
-  groupItemElem.setAttribute("data-contact-id", contactData.id);
-  groupItemElem.innerHTML = `
-    <div class="item__name">${contactData.name}</div>
-    <div class="item__phone">${contactData.phone}</div>
-    <button
-      class="item__button square-button square-button_edit"></button>
-    <button
-      class="item__button square-button square-button_delete"></button>
-  `;
+  const contactElem = document.createElement("div");
+  const contactNameElem = document.createElement("div");
+  const contactPhoneElem = document.createElement("div");
+  const contactEditBtnElem = document.createElement("button");
+  const contactDeleteBtnElem = document.createElement("button");
 
-  return groupItemElem;
+  contactElem.classList.add("group__item", "item");
+  contactNameElem.classList.add("item__name");
+  contactPhoneElem.classList.add("item__phone");
+  contactEditBtnElem.classList.add(
+    "item__button",
+    "square-button",
+    "square-button_edit"
+  );
+  contactDeleteBtnElem.classList.add(
+    "item__button",
+    "square-button",
+    "square-button_delete"
+  );
+
+  contactNameElem.innerText = contactData.name;
+  contactPhoneElem.innerText = contactData.phone;
+
+  contactElem.setAttribute("data-contact-id", contactData.id);
+  contactElem.append(
+    contactNameElem,
+    contactPhoneElem,
+    contactEditBtnElem,
+    contactDeleteBtnElem
+  );
+
+  return contactElem;
 };
 
 const createGroupElement = (group) => {
@@ -185,21 +211,84 @@ const setGroupInput = (groups) => {
   });
 };
 
+const createGroupInput = (group) => {
+  const formItem = document.createElement("div");
+  const formInput = document.createElement("input");
+  const formDelete = document.createElement("button");
+
+  formItem.classList.add("form__item");
+
+  formInput.classList.add("form__input");
+  formInput.type = "text";
+  formInput.value = group;
+  // formInput.disabled = true;
+  formInput.placeholder = "Введите название";
+
+  formDelete.classList.add(
+    "form__button",
+    "square-button",
+    "square-button_delete"
+  );
+  formDelete.type = "button";
+
+  formItem.append(formInput, formDelete);
+
+  return formItem;
+};
+
+const renderGroupsInForm = (groups) => {
+  const formBody = groupsForm.querySelector(".form__body");
+  formBody.innerHTML = "";
+  groups.forEach((group) => {
+    const input = createGroupInput(group);
+    input.firstChild.disabled = true;
+    formBody.append(input);
+  });
+};
+
+const addGroupInput = () => {
+  const formBody = groupsForm.querySelector(".form__body");
+  formBody.append(createGroupInput(""));
+};
+
+const saveGroups = () => {
+  const groupInputs = groupsForm.querySelectorAll("input");
+  const newGroups = [];
+
+  groupInputs.forEach((input) => {
+    if (input.value !== "") {
+      newGroups.push(input.value);
+    }
+  });
+
+  groups = [...newGroups];
+  setGroupInput(groups);
+};
+
+// function calls
+renderContacts(groups, contacts);
+
 // event listeners
+
 // contact form
-openContactFormBtn.addEventListener("click", () => openForm(contactForm));
+// открытие/закрытие формы для контакта
+openContactFormBtn.addEventListener("click", () => {
+  openForm(contactForm);
+  setGroupInput(groups);
+});
 closeContactFormBtn.addEventListener("click", () => {
   clearContactForm();
   closeForm(contactForm);
 });
 
-// groups form
-openGroupsFormBtn.addEventListener("click", () => openForm(groupsForm));
+// открытие/закрытие формы для групп
+openGroupsFormBtn.addEventListener("click", () => {
+  openForm(groupsForm);
+  renderGroupsInForm(groups);
+});
 closeGroupsFormBtn.addEventListener("click", () => closeForm(groupsForm));
 
-renderContacts(groups, contacts);
-setGroupInput(groups);
-
+// открывает/закрывает группы контактов
 mainContainer.addEventListener("click", (e) => {
   if (e.target.classList.contains("group__title")) {
     e.target.classList.toggle("group__title_active");
@@ -207,25 +296,34 @@ mainContainer.addEventListener("click", (e) => {
   }
 });
 
-// edit contact
-mainContainer.addEventListener("click", (e) => {
-  if (e.target.classList.contains("square-button_edit")) {
-    editContactHandler(+e.target.parentElement.getAttribute("data-contact-id"));
-  }
-});
-
-// delete contact
-mainContainer.addEventListener("click", (e) => {
-  if (e.target.classList.contains("square-button_delete")) {
-    if (confirm("Вы действительно хотите удалить контакт?")) {
-      deleteContact(+e.target.parentElement.getAttribute("data-contact-id"));
-    }
-  }
-});
-
-// add contact form
+// добавление контакта
 contactForm.addEventListener("submit", (e) => {
   e.preventDefault();
   saveContact();
   closeForm(contactForm);
+});
+
+// редактирование контакта
+mainContainer.addEventListener("click", (e) => {
+  if (e.target.classList.contains("square-button_edit")) {
+    editContactHandler(e.target.parentElement.getAttribute("data-contact-id"));
+  }
+});
+
+// удаление контакта
+mainContainer.addEventListener("click", (e) => {
+  if (e.target.classList.contains("square-button_delete")) {
+    if (confirm("Вы действительно хотите удалить контакт?")) {
+      deleteContact(e.target.parentElement.getAttribute("data-contact-id"));
+    }
+  }
+});
+
+// добавить инпут в окно групп
+addGroupInputBtn.addEventListener("click", addGroupInput);
+
+groupsForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  saveGroups(groups);
+  renderGroupsInForm(groups);
 });
