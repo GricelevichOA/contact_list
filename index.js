@@ -1,29 +1,31 @@
-// начальные данные
-let groups = ["Друзья", "Коллеги", "Соседи", "Враги"];
-// const groups = [];
+// // начальные данные
+let groups = getGroupsFromLocalStorage();
+let contacts = getContactsFromLocalStorage();
 
-let contacts = [
-  {
-    id: 1,
-    name: "Иванов Иван Иванович",
-    phone: " +1 234 567 89 10",
-    group: "Друзья",
-  },
+// let groups = ["Друзья", "Коллеги", "Соседи", "Враги"];
 
-  {
-    id: 2,
-    name: "Петров Пётр Петрович",
-    phone: "+1 234 567 89 10",
-    group: "Друзья",
-  },
+// let contacts = [
+//   {
+//     id: 1,
+//     name: "Иванов Иван Иванович",
+//     phone: " +1 234 567 89 10",
+//     group: "Друзья",
+//   },
 
-  {
-    id: 3,
-    name: "Алексеенко Алексей Алексеевич",
-    phone: "+1 234 567 89 10",
-    group: "Коллеги",
-  },
-];
+//   {
+//     id: 2,
+//     name: "Петров Пётр Петрович",
+//     phone: "+1 234 567 89 10",
+//     group: "Друзья",
+//   },
+
+//   {
+//     id: 3,
+//     name: "Алексеенко Алексей Алексеевич",
+//     phone: "+1 234 567 89 10",
+//     group: "Коллеги",
+//   },
+// ];
 
 // overlay
 const overlay = document.querySelector(".overlay");
@@ -50,6 +52,37 @@ const groupsForm = document.querySelector("#groups-form");
 const addGroupInputBtn = document.querySelector("#add-group-input");
 
 // functions
+
+// localStorage
+function getContactsFromLocalStorage() {
+  const storageContacts = localStorage.getItem("contacts");
+
+  if (storageContacts) {
+    return JSON.parse(storageContacts);
+  } else {
+    return [];
+  }
+}
+
+function addContactsToLocalStorage(contacts) {
+  localStorage.setItem("contacts", JSON.stringify(contacts));
+}
+
+function getGroupsFromLocalStorage() {
+  const storageGroups = localStorage.getItem("groups");
+
+  if (storageGroups) {
+    return JSON.parse(storageGroups);
+  } else {
+    return [];
+  }
+}
+
+function addGroupsToLocalStorage(groups) {
+  localStorage.setItem("groups", JSON.stringify(groups));
+}
+
+// form
 const openForm = (formElem) => {
   overlay.classList.remove("overlay_hidden");
   formElem.classList.remove("form_hidden");
@@ -92,6 +125,7 @@ const saveContact = (contact) => {
 
   clearContactForm();
 
+  addContactsToLocalStorage(contacts);
   // ререндер контактов
   renderContacts(groups, contacts);
 };
@@ -112,6 +146,7 @@ const deleteContact = (contactId) => {
   const newContacts = contacts.filter((contact) => contact.id !== +contactId);
 
   contacts = [...newContacts];
+  addContactsToLocalStorage(contacts);
   renderContacts(groups, contacts);
 };
 
@@ -263,6 +298,7 @@ const saveGroups = () => {
 
   groups = [...newGroups];
   setGroupInput(groups);
+  addGroupsToLocalStorage(groups);
 };
 
 // удаляет группу и все связанные с ней контакты
@@ -282,6 +318,8 @@ const deleteGroup = (group) => {
 
     console.log(`Группа ${group} и все связанные с ней контакт удалены`);
     renderGroupsInForm(groups);
+    addGroupsToLocalStorage(groups);
+    addContactsToLocalStorage(contacts);
     renderContacts(groups, contacts);
   }
 };
