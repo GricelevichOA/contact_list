@@ -265,6 +265,27 @@ const saveGroups = () => {
   setGroupInput(groups);
 };
 
+// удаляет группу и все связанные с ней контакты
+const deleteGroup = (group) => {
+  if (
+    !confirm(
+      `Вы действительно хотите удалить группу "${group}" и связанные с ней контакты?`
+    )
+  ) {
+    return;
+  } else {
+    const newGroups = groups.filter((gr) => gr !== group);
+    const newContacts = contacts.filter((c) => c.group !== group);
+
+    groups = [...newGroups];
+    contacts = [...newContacts];
+
+    console.log(`Группа ${group} и все связанные с ней контакт удалены`);
+    renderGroupsInForm(groups);
+    renderContacts(groups, contacts);
+  }
+};
+
 // function calls
 renderContacts(groups, contacts);
 
@@ -326,4 +347,10 @@ groupsForm.addEventListener("submit", (e) => {
   e.preventDefault();
   saveGroups(groups);
   renderGroupsInForm(groups);
+});
+
+groupsForm.addEventListener("click", (e) => {
+  if (e.target.classList.contains("square-button_delete")) {
+    deleteGroup(e.target.previousSibling.value);
+  }
 });
