@@ -1,6 +1,15 @@
 @import url("/styles/_normalize.css");
 
+html {
+  min-height: 100%;
+}
+
 body {
+  display: flex;
+  flex-direction: column;
+
+  min-height: 100vh;
+
   font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
   font-size: 18px;
   line-height: 120%;
@@ -11,7 +20,14 @@ body {
 
 .container {
   margin: 0 auto;
-  max-width: 1160px;
+  width: 1160px;
+}
+
+#main-container {
+  flex: 1 0;
+
+  display: flex;
+  flex-direction: column;
 }
 
 /* Overlay */
@@ -43,7 +59,10 @@ body {
 
   color: rgba(0, 0, 0, 0.3);
 
-  text-align: center;
+  align-self: center;
+
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 /* Buttons */
@@ -126,9 +145,9 @@ body {
 
 /* Navbar */
 .navbar {
-  margin-bottom: 56px;
-
   background-color: #fff;
+
+  width: 100%;
 
   -webkit-box-shadow: 0px 4px 40px 0px rgba(0, 0, 0, 0.05);
   -moz-box-shadow: 0px 4px 40px 0px rgba(0, 0, 0, 0.05);
@@ -153,6 +172,11 @@ body {
   margin-right: 16px;
 }
 
+/* Content block */
+.content {
+  margin-top: 58px;
+}
+
 /* Group */
 
 .group {
@@ -165,6 +189,10 @@ body {
   box-shadow: 0px 4px 40px 0px rgba(0, 0, 0, 0.05);
 
   background-color: #fff;
+}
+
+.group:first-child {
+  margin-top: 56px;
 }
 
 .group__title {
