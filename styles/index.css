@@ -45,11 +45,11 @@ body {
 
   background-color: rgba(0, 0, 0, 0.3);
 
-  transition: opacity 2s linear;
+  transition: all 0.1s linear;
 }
 
 .overlay_hidden {
-  display: none;
+  visibility: collapse;
   opacity: 0;
 }
 
@@ -74,6 +74,8 @@ body {
   font-size: 14px;
   line-height: 129%;
   font-weight: 700;
+
+  transition: all 0.1s ease-in-out;
 }
 
 .button_red {
@@ -125,6 +127,8 @@ body {
 
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 6px;
+
+  transition: all 0.1s ease-in-out;
 }
 
 .square-button_edit {
@@ -182,12 +186,11 @@ body {
 .group {
   margin-bottom: 24px;
 
-  border-radius: 6px;
-
   -webkit-box-shadow: 0px 4px 40px 0px rgba(0, 0, 0, 0.05);
   -moz-box-shadow: 0px 4px 40px 0px rgba(0, 0, 0, 0.05);
   box-shadow: 0px 4px 40px 0px rgba(0, 0, 0, 0.05);
 
+  border-radius: 6px;
   background-color: #fff;
 }
 
@@ -201,6 +204,8 @@ body {
   padding: 24px;
 
   background: url("../images/arrow-down.svg") no-repeat right 24px center;
+
+  transition: color 0.3s linear;
 }
 
 .group__title_active {
@@ -215,16 +220,14 @@ body {
 
 .group__items {
   padding: 0 24px 24px;
-
-  display: none;
 }
 
 .group__items:empty {
   padding-bottom: 0;
 }
 
-.group__items_active {
-  display: block;
+.group__items_hidden {
+  display: none;
 }
 
 /* Item */

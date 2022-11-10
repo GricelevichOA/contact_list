@@ -204,7 +204,7 @@ const createGroupElement = (group) => {
   groupElemTitle.innerText = group;
   groupElem.append(groupElemTitle);
 
-  groupElemContent.classList.add("group__items", "group__items_active");
+  groupElemContent.classList.add("group__items");
   groupElem.append(groupElemContent);
 
   return groupElem;
@@ -359,7 +359,7 @@ closeGroupsFormBtn.addEventListener("click", () => closeForm(groupsForm));
 mainContainer.addEventListener("click", (e) => {
   if (e.target.classList.contains("group__title")) {
     e.target.classList.toggle("group__title_active");
-    e.target.nextSibling.classList.toggle("group__items_active");
+    e.target.nextSibling.classList.toggle("group__items_hidden");
   }
 });
 
@@ -393,6 +393,7 @@ groupsForm.addEventListener("submit", (e) => {
   e.preventDefault();
   saveGroups(groups);
   renderGroupsInForm(groups);
+  closeForm(groupsForm);
 });
 
 groupsForm.addEventListener("click", (e) => {
