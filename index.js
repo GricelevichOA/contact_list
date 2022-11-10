@@ -152,14 +152,22 @@ const deleteContact = (contactId) => {
 
 const createContactElement = (contactData) => {
   const contactElem = document.createElement("div");
+
+  const contactInfoElem = document.createElement("div");
   const contactNameElem = document.createElement("div");
   const contactPhoneElem = document.createElement("div");
+
+  const contactActionsElem = document.createElement("div");
   const contactEditBtnElem = document.createElement("button");
   const contactDeleteBtnElem = document.createElement("button");
 
   contactElem.classList.add("group__item", "item");
+
+  contactInfoElem.classList.add("item__info");
   contactNameElem.classList.add("item__name");
   contactPhoneElem.classList.add("item__phone");
+
+  contactActionsElem.classList.add("item__actions");
   contactEditBtnElem.classList.add(
     "item__button",
     "square-button",
@@ -171,16 +179,16 @@ const createContactElement = (contactData) => {
     "square-button_delete"
   );
 
+  contactEditBtnElem.setAttribute("data-contact-id", contactData.id);
+  contactDeleteBtnElem.setAttribute("data-contact-id", contactData.id);
+
   contactNameElem.innerText = contactData.name;
   contactPhoneElem.innerText = contactData.phone;
 
-  contactElem.setAttribute("data-contact-id", contactData.id);
-  contactElem.append(
-    contactNameElem,
-    contactPhoneElem,
-    contactEditBtnElem,
-    contactDeleteBtnElem
-  );
+  contactInfoElem.append(contactNameElem, contactPhoneElem);
+  contactActionsElem.append(contactEditBtnElem, contactDeleteBtnElem);
+
+  contactElem.append(contactInfoElem, contactActionsElem);
 
   return contactElem;
 };
@@ -365,7 +373,7 @@ contactForm.addEventListener("submit", (e) => {
 // редактирование контакта
 mainContainer.addEventListener("click", (e) => {
   if (e.target.classList.contains("square-button_edit")) {
-    editContactHandler(e.target.parentElement.getAttribute("data-contact-id"));
+    editContactHandler(e.target.getAttribute("data-contact-id"));
   }
 });
 
@@ -373,7 +381,7 @@ mainContainer.addEventListener("click", (e) => {
 mainContainer.addEventListener("click", (e) => {
   if (e.target.classList.contains("square-button_delete")) {
     if (confirm("Вы действительно хотите удалить контакт?")) {
-      deleteContact(e.target.parentElement.getAttribute("data-contact-id"));
+      deleteContact(e.target.getAttribute("data-contact-id"));
     }
   }
 });
