@@ -377,6 +377,10 @@ body {
     gap: 20px;
   }
 
+  .form {
+    width: 100%;
+  }
+
   .item {
     /* flex-direction: column; */
     align-items: flex-start;
@@ -398,11 +402,5 @@ body {
 
   .group:first-child {
     margin-top: 24px;
-  }
-}
-
-@media (max-width: 360px) {
-  .container {
-    width: 350px;
   }
 }
