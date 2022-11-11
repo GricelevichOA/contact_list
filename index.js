@@ -28,7 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const addGroupInputBtn = document.querySelector("#add-group-input");
 
   // functions
-
   // localStorage
   function getContactsFromLocalStorage() {
     const storageContacts = localStorage.getItem("contacts");
@@ -126,6 +125,25 @@ document.addEventListener("DOMContentLoaded", () => {
     renderContacts(groups, contacts);
   }
 
+  // создаёт элемент группы для основного блока
+  function createGroupElement(group) {
+    const groupElem = document.createElement("div");
+    const groupElemTitle = document.createElement("div");
+    const groupElemContent = document.createElement("div");
+
+    groupElem.classList.add("group");
+
+    groupElemTitle.classList.add("group__title", "group__title_active");
+    groupElemTitle.innerText = group;
+    groupElem.append(groupElemTitle);
+
+    groupElemContent.classList.add("group__items");
+    groupElem.append(groupElemContent);
+
+    return groupElem;
+  }
+
+  // создаёт элемент с контактом для группы
   function createContactElement(contactData) {
     const contactElem = document.createElement("div");
 
@@ -169,23 +187,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return contactElem;
   }
 
-  function createGroupElement(group) {
-    const groupElem = document.createElement("div");
-    const groupElemTitle = document.createElement("div");
-    const groupElemContent = document.createElement("div");
-
-    groupElem.classList.add("group");
-
-    groupElemTitle.classList.add("group__title", "group__title_active");
-    groupElemTitle.innerText = group;
-    groupElem.append(groupElemTitle);
-
-    groupElemContent.classList.add("group__items");
-    groupElem.append(groupElemContent);
-
-    return groupElem;
-  }
-
+  // рендерит контакты в основном блоке
   function renderContacts(groupsArray, contactsArray) {
     mainContainer.innerHTML = "";
 
@@ -216,6 +218,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // добавляет группы в селект групп в форме создания пользователя
   function setGroupInput(groups) {
     contactGroupInput.innerHTML = `
     <option value="" disabled selected hidden>Выберите группу</option>
@@ -230,6 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // создаёт элемент инпута для группы
   function createGroupInput(group) {
     const formItem = document.createElement("div");
     const formInput = document.createElement("input");
@@ -255,6 +259,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return formItem;
   }
 
+  // рендерит группы в форме групп
   function renderGroupsInForm(groups) {
     const formBody = groupsForm.querySelector(".form__body");
 
@@ -271,6 +276,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // добавляет новый инпут в форму групп
   function addGroupInput() {
     const formBody = groupsForm.querySelector(".form__body");
     const input = createGroupInput("");
@@ -283,6 +289,7 @@ document.addEventListener("DOMContentLoaded", () => {
     formBody.append(input);
   }
 
+  // сохраняет группы в масив групп
   function saveGroups() {
     const groupInputs = groupsForm.querySelectorAll("input");
     const newGroups = [];
@@ -319,6 +326,70 @@ document.addEventListener("DOMContentLoaded", () => {
       addContactsToLocalStorage(contacts);
       renderContacts(groups, contacts);
     }
+  }
+
+  // Маска для инпута телефона
+  // принимает в инпут только цифры
+  function getNumsFromInput(input) {
+    return input.value.replace(/\D/g, "");
+  }
+
+  // форматирование вставки текста в инпут номера телефона
+  function handlePasteInPhoneInput(e) {
+    let pasted = e.clipboardData || window.clipboardData;
+    let input = e.target;
+    let inputValue = getNumsFromInput(input);
+
+    if (pasted) {
+      let pastedText = pasted.getData("Text");
+      if (/\D/g.test(pastedText)) {
+        input.value = inputValue;
+      }
+    }
+  }
+
+  // форматирование ввода номера телефона
+  function formatTelInput(e) {
+    let input = e.target;
+    let inputValue = getNumsFromInput(input);
+    let formattedValue = "";
+    let selectionStart = input.selectionStart;
+
+    if (!inputValue) {
+      return (input.value = "");
+    }
+
+    if (input.value.length !== selectionStart) {
+      if (e.data && /\D/g.test(e.data)) {
+        input.value = inputValue;
+      }
+      return;
+    }
+
+    if (
+      inputValue[0] === "7" ||
+      inputValue[0] === "8" ||
+      inputValue[0] === "9"
+    ) {
+      formattedValue = "+7";
+
+      if (inputValue > 1) {
+        formattedValue += ` (${inputValue.substring(1, 4)}`;
+      }
+      if (inputValue >= 5) {
+        formattedValue += `) ${inputValue.substring(4, 7)}`;
+      }
+      if (inputValue >= 8) {
+        formattedValue += `-${inputValue.substring(7, 9)}`;
+      }
+      if (inputValue >= 10) {
+        formattedValue += `-${inputValue.substring(9, 11)}`;
+      }
+    } else {
+      formattedValue = `+${inputValue}`;
+    }
+
+    input.value = formattedValue;
   }
 
   // function calls
@@ -385,67 +456,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // closeForm(groupsForm);
   });
 
-  // Маска для инпута телефона
-  function getNumsFromInput(input) {
-    return input.value.replace(/\D/g, "");
-  }
-
-  function handlePasteInPhoneInput(e) {
-    let pasted = e.clipboardData || window.clipboardData;
-    let input = e.target;
-    let inputValue = getNumsFromInput(input);
-
-    if (pasted) {
-      let pastedText = pasted.getData("Text");
-      if (/\D/g.test(pastedText)) {
-        input.value = inputValue;
-      }
-    }
-  }
-
-  function formatTelInput(e) {
-    let input = e.target;
-    let inputValue = getNumsFromInput(input);
-    let formattedValue = "";
-    let selectionStart = input.selectionStart;
-
-    if (!inputValue) {
-      return (input.value = "");
-    }
-
-    if (input.value.length !== selectionStart) {
-      if (e.data && /\D/g.test(e.data)) {
-        input.value = inputValue;
-      }
-      return;
-    }
-
-    if (
-      inputValue[0] === "7" ||
-      inputValue[0] === "8" ||
-      inputValue[0] === "9"
-    ) {
-      formattedValue = "+7";
-
-      if (inputValue > 1) {
-        formattedValue += ` (${inputValue.substring(1, 4)}`;
-      }
-      if (inputValue >= 5) {
-        formattedValue += `) ${inputValue.substring(4, 7)}`;
-      }
-      if (inputValue >= 8) {
-        formattedValue += `-${inputValue.substring(7, 9)}`;
-      }
-      if (inputValue >= 10) {
-        formattedValue += `-${inputValue.substring(9, 11)}`;
-      }
-    } else {
-      formattedValue = `+${inputValue}`;
-    }
-
-    input.value = formattedValue;
-  }
-
+  // форматирует инпут телефона по маске
   contactPhoneInput.addEventListener("input", formatTelInput);
+
+  // форматирует вставку в инпут телефона
   contactPhoneInput.addEventListener("paste", handlePasteInPhoneInput);
 });
