@@ -74,12 +74,14 @@
       <div class="form__body">
         <div class="form__item">
           <input id="form-contact-name" class="form__input" type="text"
-            name="contact_name" placeholder="Введите ФИО" required>
+            name="contact_name" placeholder="Введите ФИО" autocomplete="off"
+            required>
         </div>
 
         <div class="form__item">
           <input id="form-contact-number" class="form__input" type="tel"
-            name="contact_phone" placeholder="Введите номер" required>
+            name="contact_phone" maxlength="18" placeholder="Введите номер"
+            autocomplete="off" required>
         </div>
 
 
