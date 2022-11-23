@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (storageGroups) {
       return JSON.parse(storageGroups);
     } else {
-      return [];
+      return ["Друзья", "Коллеги"];
     }
   }
 
@@ -99,6 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
         contacts[contactIndex].group = newContact.group;
       }
     }
+    createNotification("Контакт сохранён");
 
     clearContactForm();
 
@@ -309,6 +310,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // удаляет группу и все связанные с ней контакты
   function deleteGroup(group) {
+    if (groups.length === 1) {
+      createNotification("Вы не можете удалить последнюю группу");
+      return;
+    }
+
     if (
       !confirm(
         `Вы действительно хотите удалить группу "${group}" и связанные с ней контакты?`
@@ -322,11 +328,14 @@ document.addEventListener("DOMContentLoaded", () => {
       groups = [...newGroups];
       contacts = [...newContacts];
 
-      console.log(`Группа ${group} и все связанные с ней контакт удалены`);
       renderGroupsInForm(groups);
       addGroupsToLocalStorage(groups);
       addContactsToLocalStorage(contacts);
       renderContacts(groups, contacts);
+
+      createNotification(
+        `Группа ${group} и все связанные с ней контакты удалены`
+      );
     }
   }
 
@@ -394,8 +403,51 @@ document.addEventListener("DOMContentLoaded", () => {
     input.value = formattedValue;
   }
 
+  // notifications
+  function createNotification(messageText) {
+    const notification = document.createElement("div");
+    const header = document.createElement("div");
+    const close = document.createElement("button");
+    const body = document.createElement("div");
+    const text = document.createElement("span");
+
+    notification.classList.add("notification", "notification_hidden");
+    header.classList.add("notification__header");
+    close.classList.add("form__close", "notification__close");
+    body.classList.add("notification__body");
+    text.classList.add("notification__text");
+
+    close.addEventListener("click", () => {
+      closeNotification(notification);
+    });
+
+    text.innerText = messageText;
+
+    notification.append(header, body);
+    header.append(close);
+    body.append(text);
+
+    notificationsBox.append(notification);
+
+    setTimeout(() => {
+      notification.classList.remove("notification_hidden");
+    }, 300);
+
+    setTimeout(() => {
+      closeNotification(notification);
+    }, 4000);
+  }
+
+  function closeNotification(note) {
+    note.classList.add("notification_hidden");
+    setTimeout(() => {
+      note.remove();
+    }, 300);
+  }
+
   // function calls
   renderContacts(groups, contacts);
+  setGroupInput(groups);
 
   // event listeners
 
@@ -403,7 +455,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // открытие/закрытие формы для контакта
   openContactFormBtn.addEventListener("click", () => {
     openForm(contactForm);
-    setGroupInput(groups);
   });
   closeContactFormBtn.addEventListener("click", () => {
     clearContactForm();
@@ -444,6 +495,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.target.classList.contains("square-button_delete")) {
       if (confirm("Вы действительно хотите удалить контакт?")) {
         deleteContact(e.target.getAttribute("data-contact-id"));
+        createNotification("Контакт удалён");
       }
     }
   });
@@ -456,6 +508,7 @@ document.addEventListener("DOMContentLoaded", () => {
     saveGroups(groups);
     renderGroupsInForm(groups);
     // closeForm(groupsForm);
+    createNotification("Группы сохранены");
   });
 
   // форматирует инпут телефона по маске
@@ -463,49 +516,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // форматирует вставку в инпут телефона
   contactPhoneInput.addEventListener("paste", handlePasteInPhoneInput);
-
-  function createNotification(messageText) {
-    const notification = document.createElement("div");
-    const header = document.createElement("div");
-    const close = document.createElement("button");
-    const body = document.createElement("div");
-    const text = document.createElement("span");
-
-    notification.classList.add("notification", "notification_hidden");
-    header.classList.add("notification__header");
-    close.classList.add("form__close", "notification__close");
-    body.classList.add("notification__body");
-    text.classList.add("notification__text");
-
-    close.addEventListener("click", () => {
-      closeNotification(notification);
-    });
-
-    text.innerText = messageText;
-
-    notification.append(header, body);
-    header.append(close);
-    body.append(text);
-
-    notificationsBox.append(notification);
-
-    setTimeout(() => {
-      notification.classList.remove("notification_hidden");
-    }, 300);
-
-    setTimeout(() => {
-      closeNotification(notification);
-    }, 4000);
-  }
-
-  function closeNotification(note) {
-    // note.remove();
-    note.classList.add("notification_hidden");
-  }
-
-  document.body.addEventListener("keyup", (e) => {
-    if (e.code === "Space") {
-      createNotification("Test");
-    }
-  });
 });
