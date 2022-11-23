@@ -24,8 +24,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const openGroupsFormBtn = document.querySelector("#groups-form-open");
   const closeGroupsFormBtn = document.querySelector("#groups-form-close");
   const groupsForm = document.querySelector("#groups-form");
-
   const addGroupInputBtn = document.querySelector("#add-group-input");
+
+  // notifications
+  const notificationsBox = document.querySelector("#notifications");
 
   // functions
   // localStorage
@@ -461,4 +463,49 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // форматирует вставку в инпут телефона
   contactPhoneInput.addEventListener("paste", handlePasteInPhoneInput);
+
+  function createNotification(messageText) {
+    const notification = document.createElement("div");
+    const header = document.createElement("div");
+    const close = document.createElement("button");
+    const body = document.createElement("div");
+    const text = document.createElement("span");
+
+    notification.classList.add("notification", "notification_hidden");
+    header.classList.add("notification__header");
+    close.classList.add("form__close", "notification__close");
+    body.classList.add("notification__body");
+    text.classList.add("notification__text");
+
+    close.addEventListener("click", () => {
+      closeNotification(notification);
+    });
+
+    text.innerText = messageText;
+
+    notification.append(header, body);
+    header.append(close);
+    body.append(text);
+
+    notificationsBox.append(notification);
+
+    setTimeout(() => {
+      notification.classList.remove("notification_hidden");
+    }, 300);
+
+    setTimeout(() => {
+      closeNotification(notification);
+    }, 4000);
+  }
+
+  function closeNotification(note) {
+    // note.remove();
+    note.classList.add("notification_hidden");
+  }
+
+  document.body.addEventListener("keyup", (e) => {
+    if (e.code === "Space") {
+      createNotification("Test");
+    }
+  });
 });
