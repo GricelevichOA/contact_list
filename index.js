@@ -49,7 +49,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const storageGroups = localStorage.getItem("groups");
 
     if (storageGroups) {
-      return JSON.parse(storageGroups);
+      const gr = JSON.parse(storageGroups);
+      // если в localstorage пустой масив групп, добавляет эти два по дефолту
+      if (gr.length === 0) {
+        return ["Друзья", "Коллеги"];
+      } else {
+        return gr;
+      }
     } else {
       return ["Друзья", "Коллеги"];
     }
